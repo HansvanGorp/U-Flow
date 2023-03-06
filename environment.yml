@@ -1,0 +1,14 @@
+name: U-Flow-env
+channels:
+  - pytorch
+dependencies:
+  - python=3.9
+  - pytorch
+  - natsort
+  - matplotlib
+  - scipy
+  - scikit-learn
+  - pip
+  - pip:
+    - wandb
+    - mne
