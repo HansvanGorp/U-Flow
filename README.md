@@ -1,6 +1,5 @@
 # Introduction
 This code can be used to replicate the results reported in the paper: "Modeling the Impact of Inter-Rater Disagreement on Sleep Statistics using Deep Generative Learning" (Accepted for publication in J-BHI).
-For The previous ICASSP version of the paper, ["Aleatoric Uncertainty Estimation of Overnight Sleep Statistics Through Posterior Sampling Using Conditional Normalizing Flows"](https://ieeexplore.ieee.org/abstract/document/10096894), please select the ICASSP branch. 
 
 ## Environment
 To make use of the environment, first install [Anaconda](https://www.anaconda.com/). In anaconda prompt navigate to the parent directory and run:
