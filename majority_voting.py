@@ -9,7 +9,7 @@ from sklearn.metrics import f1_score
 def get_majority_voting_results(majority_grth,majority_methods):
     no_methods = len(majority_methods)
     no_subjects = majority_grth.size(0)
-    majority_voing_results = torch.zeros(2,no_methods,no_subjects)
+    majority_voing_results = torch.zeros(7,no_methods,no_subjects)
     masks = (majority_grth[:,:]!=-1)
 
     # loop over methods and subjects
@@ -26,6 +26,10 @@ def get_majority_voting_results(majority_grth,majority_methods):
             
             # kappa
             majority_voing_results[1,method_id,subject_id] = cohen_kappa_score(majority_grth_masked,majority_here_masked)
+        
+            # F1 scores
+            F1 = f1_score(majority_grth_masked,majority_here_masked,average= None, labels = [0,1,2,3,4], zero_division=1)
+            majority_voing_results[2:,method_id,subject_id] = torch.tensor(F1)
             
     return majority_voing_results
 

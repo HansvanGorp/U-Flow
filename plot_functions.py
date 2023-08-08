@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # local
-    
+from overnight_statistics import convert_2_cdf
+
 # %% plot a single hypnogram
 def plot_hypnogram(y):
     y = y.float()
@@ -48,21 +49,9 @@ def plot_hypnogram(y):
     plt.ylim(-0.2,4.2)
     
 # %% plot an eCDF
-def convert_2_cdf(samples):
-    x_min = -208/2
-    x_max = 1792/2
-    no_bins = 2000
-    
-    bins = torch.arange(no_bins)/2 + x_min
-    
-    hist = torch.histc(samples, bins = no_bins, min=x_min, max=x_max)
-    CDF = hist.cumsum(dim=0)
-    CDF = CDF/CDF[-1]
-    
-    return bins,CDF
-
-def plot_eCDF(samples):
-    bins,CDF = convert_2_cdf(samples)
+def plot_eCDF(samples, bin_multiplier):
+    bins,CDF = convert_2_cdf(samples / bin_multiplier)
+    bins = bins * bin_multiplier
     
     # repeat with interleaving
     bins = bins.repeat_interleave(2)

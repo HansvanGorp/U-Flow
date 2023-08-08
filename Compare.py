@@ -11,7 +11,7 @@ import printing
 # %% loading
 # user inputs lists of names to compare against, default is the methods implemented in the manuscript
 parser = argparse.ArgumentParser(description='compare results')
-parser.add_argument('-names_to_compare',type=str,nargs="+",default=['U-Net','Stanford','U-Sleep','U-Flow'])
+parser.add_argument('-names_to_compare',type=str,nargs="+",default=['U-Net_fact','U-Net_drop','Stanford','U-Sleep','U-Flow'])
 args = parser.parse_args()
 
 # load the predictions
@@ -44,20 +44,37 @@ overnight_statistics_results = overnight_statistics.get_overnight_statistics_res
 
 # %% print the results in tables
 row_names = [ 'Accuracy           ',
-              'Cohen\'s kappa      ',]
+              'Cohen\'s kappa      ',
+              'F1 - Wake          ',
+              'F1 - N1            ',
+              'F1 - N2            ',
+              'F1 - N3            ',
+              'F1 - REM           ']
 
 table_name = 'Vote results'
 values = majority_voing_results
 printing.print_table(table_name, row_names, args.names_to_compare, values, lower=False)
 
 row_names = [ 'TST          [min] ',
+              'Sleep Effic.   [%] ',
+              'SOL          [min] ',
+              'REM latency  [min] ',
+              'WASO         [min] ',
+              'REM awakenings [-] ',
+              'NREM awakenings[-] ',
               'Time in N1   [min] ',
               'Time in N2   [min] ',
               'Time in N3   [min] ',
-              'Time in REM  [min] ',
-              'REM awakenings [-] ',
-              'NREM awakenings[-] ',]
+              'Time in REM  [min] ']
 
 table_name = 'KL divergence'
-values = overnight_statistics_results
+values = overnight_statistics_results[0]
+printing.print_table(table_name, row_names, args.names_to_compare, values)
+
+table_name = 'WD metric'
+values = overnight_statistics_results[1]
+printing.print_table(table_name, row_names, args.names_to_compare, values)
+
+table_name = 'KS metric'
+values = overnight_statistics_results[2]
 printing.print_table(table_name, row_names, args.names_to_compare, values)

@@ -26,7 +26,7 @@ def extract_labels(file,max_epochs,patient_id):
     # stack the scorings of the 6 different scorers
     scoring_here = np.vstack(scoring_here)
 
-    # change scorer 2-6 based on cross correlation with scorer 1
+    # change scorer 2-6 based on cross correlation with scorer 1 (since they are not yet properly synchronized)
     scoring_here_2 = np.zeros_like(scoring_here)-1
     
     # offset of 100
@@ -58,7 +58,7 @@ def extract_labels(file,max_epochs,patient_id):
         
     return scoring_here_5, lag
 
-# %%
+# %% scaling of PSG using the 95-th percentile
 def scale(PSG):
     s = np.percentile(np.abs(PSG),95,axis=1)
     s = np.repeat(np.expand_dims(s,1),PSG.shape[1],axis=1)

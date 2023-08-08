@@ -12,8 +12,8 @@ import overnight_statistics
 # %% loading
 # user inputs lists of names to compare against, default is the methods implemented in the manuscript
 parser = argparse.ArgumentParser(description='compare results')
-parser.add_argument('-names_to_compare',type=str,nargs="+",default=['U-Net','U-Flow'])
-parser.add_argument('-subject_id',type=int,default=34)
+parser.add_argument('-names_to_compare',type=str,nargs="+",default=['U-Net_fact','U-Net_drop','U-Flow'])
+parser.add_argument('-subject_id',type=int,default=19)
 args = parser.parse_args()
 
 # load the predictions
@@ -30,10 +30,19 @@ majority_methods = []
 for method_id in range(no_methods):
     majority_here = majority_voting.get_majority_vote(predictions_methods[method_id])
     majority_methods.append(majority_here)
+
+
+# calculate overnight statistics
+overnight_statistics_grth = overnight_statistics.get_overnight_stats_one_subject(predictions_grth,args.subject_id)
+overnight_statistics_methods = []
+for method_id in range(no_methods):
+    overnight_statistics_here = overnight_statistics.get_overnight_stats_one_subject(predictions_methods[method_id],args.subject_id)
+    overnight_statistics_methods.append(overnight_statistics_here)
     
 # %% append results into single lists
 predictions = predictions_methods + [predictions_grth]
 majority_votes = majority_methods + [majority_grth]
+overnight_statistics = overnight_statistics_methods + [overnight_statistics_grth]
 names = args.names_to_compare + ["ground truth"]
 
 # %% plot the hypnograms
@@ -69,3 +78,59 @@ for j,(prediction,majority_vote,name) in enumerate(zip(predictions,majority_vote
     
 plt.savefig("figures//hypnograms.png",dpi=300,bbox_inches='tight')
 plt.close()
+
+# %% eCDF of overnight statistics
+stat_names = ['Total Sleep Time', 
+              'Sleep Efficiency',
+              'Sleep Onset Latency', 
+              'REM Latency', 
+              'WASO', 
+              'REM awakenings ',
+              'NREM awakenings',
+              'Time in N1',
+              'Time in N2',
+              'Time in N3',
+              'Time in REM']
+
+for i, stat_name in enumerate(stat_names):
+    plt.figure()
+    min_x = []
+    max_x = []
+    for j,stats in enumerate(overnight_statistics):  
+        samples = stats[i]
+        
+        if i == 1:
+            # Sleep Efficiency, bin_multiplier = Recording_time / 100
+            bin_multiplier = 100 / stats[11]
+        else:
+            # normal stats, bin_multiplier = 1
+            bin_multiplier = 1
+
+        min_x_here, max_x_here = plot_functions.plot_eCDF(samples, bin_multiplier)
+        
+        min_x.append(min_x_here)
+        max_x.append(max_x_here)
+        
+    # title
+    if j not in [4,5]:
+        plt.xlabel('time [min]')
+    else:
+        plt.xlabel('awakenings [-]')    
+    
+    plt.ylabel('cumulative probability')
+    
+    plt.title(stat_name)
+    
+    # min and max
+    x_min2 = min(min_x)*0.95
+    x_max2 = max(max_x)*1.05
+    
+    if x_min2 <= 5:
+        x_min2 = -1
+        
+    plt.xlim(x_min2,x_max2)
+    
+    plt.legend(names)
+    plt.grid()
+    plt.savefig(f"figures//{stat_name}.png",dpi=300,bbox_inches='tight')
+    plt.close()

@@ -13,7 +13,7 @@ import preprocess_functions
 # %% main
 # user inputs
 parser = argparse.ArgumentParser(description='extract IS-RC data and preprocess')
-parser.add_argument('-data_loc'  , type=str)
+parser.add_argument('-data_loc'  , type=str, default = "D:\\Datasets\\U-Flow-Data\\raw\\IS-RC\\")
 parser.add_argument('-target_loc', type=str, default = "preprocessed//")
 args = parser.parse_args()
 
@@ -44,7 +44,7 @@ for i,file in enumerate(tqdm(file_names)):
     
     # save the data
     save_name = f"{args.target_loc}//IS-RC_{i}.npz"
-    np.savez(save_name, PSG = PSG, scoring = scoring)
+    #np.savez(save_name, PSG = PSG, scoring = scoring)
     
     
     
