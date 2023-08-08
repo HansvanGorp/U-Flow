@@ -1,5 +1,5 @@
 # Introduction
-This code can be used to replicate the results reported in the paper: "Modeling the Inter-Rater Disagreement of Sleep Statistics using Deep Generative Learning". 
+This code can be used to replicate the results reported in the paper: ["Aleatoric Uncertainty Estimation of Overnight Sleep Statistics Through Posterior Sampling Using Conditional Normalizing Flows"](https://ieeexplore.ieee.org/abstract/document/10096894). 
 
 ## Environment
 To make use of the environment, first install [Anaconda](https://www.anaconda.com/). In anaconda prompt navigate to the parent directory and run:
